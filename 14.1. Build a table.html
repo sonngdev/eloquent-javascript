@@ -1,0 +1,48 @@
+<h1>Mountains</h1>
+
+<div id="mountains"></div>
+
+<script>
+  const MOUNTAINS = [
+    {name: "Kilimanjaro", height: 5895, place: "Tanzania"},
+    {name: "Everest", height: 8848, place: "Nepal"},
+    {name: "Mount Fuji", height: 3776, place: "Japan"},
+    {name: "Vaalserberg", height: 323, place: "Netherlands"},
+    {name: "Denali", height: 6168, place: "United States"},
+    {name: "Popocatepetl", height: 5465, place: "Mexico"},
+    {name: "Mont Blanc", height: 4808, place: "Italy/France"}
+  ];
+
+  // Your code here
+  let mountains = document.getElementById("mountains");
+  let table = document.createElement("table");
+
+  // First row
+  let firstRow = document.createElement("tr");
+  for (let column in MOUNTAINS[0]) {
+    let col = document.createElement("th");
+    let colName = document.createTextNode(column.toUpperCase());
+    col.appendChild(colName);
+    firstRow.appendChild(col);
+  }
+  table.appendChild(firstRow);
+
+  // Next rows
+  for (let mountain of MOUNTAINS) {
+    let row = document.createElement("tr");
+    for (let key in mountain) {
+      let cell = document.createElement("td");
+      let text = mountain[key];
+      let cellData = document.createTextNode(text);
+      if (typeof text == "number") {
+        cell.style.textAlign = "right";
+      }
+      cell.appendChild(cellData);
+      row.appendChild(cell);
+    }
+    table.appendChild(row);
+  }
+
+  // Append table
+  mountains.appendChild(table);
+</script>
