@@ -1,0 +1,25 @@
+<tab-panel>
+  <div data-tabname="one">Tab one</div>
+  <div data-tabname="two">Tab two</div>
+  <div data-tabname="three">Tab three</div>
+</tab-panel>
+<script>
+  function asTabs(node) {
+    // Your code here.
+    let children = node.getElementsByTagName("div");
+    for (let i = 0; i < children.length; i++) {
+      let child = children[i];
+      let btn = document.createElement("button");
+      btn.textContent = child.getAttribute("data-tabname");
+      child.style.display = "none";
+      btn.addEventListener("click", event => {
+        for (let i = 0; i < children.length; i++) {
+          children[i].style.display = "none";
+        }
+        child.style.display = "block";
+      })
+      node.insertBefore(btn, children[0]);
+    }
+  }
+  asTabs(document.querySelector("tab-panel"));
+</script>
