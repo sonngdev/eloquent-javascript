@@ -1,0 +1,84 @@
+<style>
+  canvas {
+    overflow: hidden;
+  }
+</style>
+
+<canvas width="400" height="400"></canvas>
+
+<script>
+  let cx = document.querySelector("canvas").getContext("2d");
+  const scale = 1000;
+  
+  // Box
+  const box = {
+    posX: 0,
+    posY: 0,
+    width: 400,
+    height: 300
+  }
+  
+  // Ball
+  const ball = {
+    centerX: 200,
+    centerY: 150,
+    speedX: Math.random() * scale,
+    speedY: Math.random() * scale,
+    radius: 20
+  }
+  ball.posX = ball.centerX - ball.radius;
+  ball.posY = ball.centerY - ball.radius;
+  ball.diameter = ball.radius * 2;
+  
+  function touchHorizontalWall(ball, box) {
+    return ball.posY <= box.posY || 
+           ball.posY + ball.diameter >= box.posY + box.height;
+  }
+  
+  function touchVerticalWall(ball, box) {
+    return ball.posX <= box.posX ||
+           ball.posX + ball.diameter >= box.posX + box.width;
+  }
+  
+  function updateBall(step, ball, box) {
+    // change centerX and centerY
+    ball.centerX += step * ball.speedX;
+    ball.centerY += step * ball.speedY;
+    ball.posX = ball.centerX - ball.radius;
+    ball.posY = ball.centerY - ball.radius;
+    if (touchHorizontalWall(ball, box)) {
+      ball.speedY = -ball.speedY;
+    }
+    if (touchVerticalWall(ball, box)) {
+      ball.speedX = -ball.speedX;
+    }
+  }
+  
+  let lastTime = null;
+  function frame(time) {
+    if (lastTime != null) {
+      updateAnimation(Math.min(100, time - lastTime) / 1000);
+    }
+    lastTime = time;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  function updateAnimation(step) {
+    // Clear
+    cx.clearRect(box.posX, box.posY, 400, 400);
+    
+    // Build box
+    cx.fillStyle = "green";
+    cx.fillRect(box.posX, box.posY, box.width, box.height);
+
+    // Build ball
+    cx.beginPath();
+    cx.arc(ball.centerX, ball.centerY, ball.radius, 0, 7);
+    cx.closePath();
+    cx.fillStyle = "orange";
+    cx.fill();
+    
+    updateBall(step, ball, box);
+  }
+</script>

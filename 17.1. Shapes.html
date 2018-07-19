@@ -1,0 +1,98 @@
+<canvas width="1440" height="700"></canvas>
+<script>
+  let cx = document.querySelector("canvas").getContext("2d");
+
+  // Your code here.
+  function drawTrapezoid(x, y, small, large, height) {
+    if (small > large) {
+      let temp = small;
+      small = large;
+      large = temp;
+    }
+  	let offset = (large - small) / 2;
+  	cx.save();
+  	cx.translate(x, y);
+  	cx.beginPath();
+  	cx.moveTo(offset, 0);
+  	cx.lineTo(offset + small, 0);
+  	cx.lineTo(large, height);
+  	cx.lineTo(0, height);
+  	cx.closePath();
+  	cx.stroke();
+    cx.restore();
+  }
+  drawTrapezoid(10, 20, 70, 100, 50);
+
+  function drawDiamond(x, y, width, color) {
+    let side = width / Math.sqrt(2);
+    cx.save();
+    cx.translate(x + width / 2, y);
+    cx.rotate(Math.PI / 4);
+    cx.fillStyle = color || "red";
+    cx.fillRect(0, 0, side, side);
+    cx.restore();
+  }
+  drawDiamond(160, 20, 100, "cyan");
+
+  function drawZigzaggingLine(x, y, width, height, spikes, reversed) {
+    let dist = height / spikes;
+    cx.save();
+    cx.translate(x, y);
+    cx.beginPath();
+    if (!reversed) {
+      cx.moveTo(0, 0);
+      for (let i = 0; i < spikes; i++) {
+        cx.lineTo(width, dist * (i + 0.5));
+        cx.lineTo(0, dist * (i+1));
+      }
+    } else {
+      cx.moveTo(width, 0);
+      for (let i = 0; i < spikes; i++) {
+        cx.lineTo(0, dist * (i + 0.5));
+        cx.lineTo(width, dist * (i+1));
+      }
+    }
+    cx.stroke();
+    cx.restore();
+  }
+  drawZigzaggingLine(310, 20, 100, 100, 7);
+
+  function drawSpiral(x, y, width, revolutions, segments) {
+    segments = segments || 100;
+    let angleDiff = (Math.PI * 2 * revolutions) / segments;
+    let radiusDiff = (width / 2) / segments;
+    let angle = 0;
+    let radius = 0;
+    cx.save();
+    cx.translate(x + width / 2, y + width / 2);
+    cx.beginPath();
+    for (let i = 0; i < segments; i++) {
+      cx.arc(0, 0, radius, angle, angle + angleDiff);
+      angle += angleDiff;
+      radius += radiusDiff;
+    }
+    cx.stroke();
+    cx.restore();
+  }
+  drawSpiral(460, 20, 100, 3, 1000);
+
+  function drawStar(x, y, width, spikes, color) {
+    let angle = (Math.PI * 2) / spikes;
+    let startAngle = Math.PI / 2;
+    cx.save();
+    cx.translate(x + width / 2, y + width / 2);
+    cx.beginPath();
+    cx.moveTo(0, -width / 2);
+    for (let i = 0; i < spikes; i++) {
+      let xEnd = Math.cos(startAngle + angle) * width / 2;
+      let yEnd = - Math.sin(startAngle + angle) * width / 2;
+      cx.quadraticCurveTo(0, 0, xEnd, yEnd);
+      startAngle += angle;
+    }
+    cx.fillStyle = color || "orange";
+    cx.fill();
+    cx.closePath();
+    cx.restore();
+  }
+  drawStar(610, 20, 100, 8, "green");
+</script>
