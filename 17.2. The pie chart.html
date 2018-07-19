@@ -7,8 +7,7 @@
     {name: "No comment", count: 175, color: "silver"}
   ];
   let cx = document.querySelector("canvas").getContext("2d");
-  let total = results
-    .reduce((sum, {count}) => sum + count, 0);
+  let total = results.reduce((sum, {count}) => sum + count, 0);
   let currentAngle = -0.5 * Math.PI;
   let centerX = 300, centerY = 150;
 
