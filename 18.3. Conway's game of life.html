@@ -1,0 +1,89 @@
+<style media="screen">
+  body {
+    margin: 1rem;
+  }
+  #grid {
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div id="grid"></div>
+<button id="next">Next generation</button>
+
+<script>
+  // Your code here.
+  const div = document.getElementById("grid");
+  const button = document.getElementById("next");
+  const width = 20;
+
+  function createRandomBooleanGrid(width) {
+    let booleanGrid = [];
+    for (let y = 0; y < width; y++) {
+      let row = [];
+      for (let x = 0; x < width; x++) {
+        // 1 or 0
+        let rand = Math.round(Math.random());
+        // true or false
+        row.push(Boolean(rand));
+      }
+      booleanGrid.push(row);
+    }
+    return booleanGrid;
+  }
+  let booleanGrid = createRandomBooleanGrid(width);
+
+  function emptyNode(node) {
+    while (node.firstChild) {
+      node.removeChild(node.firstChild);
+    }
+  }
+
+  function createCheckbox(checked) {
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = checked;
+    return checkbox;
+  }
+
+  function replaceGameGrid(container, booleanGrid) {
+    emptyNode(container);
+    booleanGrid.forEach(row => {
+      row.forEach(bool => {
+        let checkbox = createCheckbox(bool);
+        container.appendChild(checkbox);
+      });
+      let br = document.createElement("br");
+      container.appendChild(br);
+    });
+  }
+  replaceGameGrid(div, booleanGrid);
+
+  function updateBooleanGrid(booleanGrid) {
+    let updated = booleanGrid.map(row => row.slice());
+    for (let y = 0; y < booleanGrid.length; y++) {
+      for (let x = 0; x < booleanGrid[y].length; x++) {
+        let live = booleanGrid[y][x];
+        // Number of live neighbors
+        let count = 0;
+        for (let i = y - 1; i <= y + 1; i++) {
+          for (let k = x - 1; k <= x + 1; k++) {
+            if (booleanGrid[i] && booleanGrid[i][k]) {
+              if (booleanGrid[i][k] && !(i == y && k == x)) count++;
+            }
+          }
+        }
+        if (live) {
+          if (count < 2 || count > 3) updated[y][x] = false;
+        } else {
+          if (count == 3) updated[y][x] = true;
+        }
+      }
+    }
+    return updated;
+  }
+
+  button.addEventListener("click", event => {
+    booleanGrid = updateBooleanGrid(booleanGrid);
+    replaceGameGrid(div, booleanGrid);
+  })
+</script>
