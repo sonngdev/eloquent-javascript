@@ -1,0 +1,81 @@
+<style media="screen">
+  body {
+    margin: 1rem;
+  }
+  #grid {
+    margin-bottom: 1rem;
+  }
+</style>
+
+<div id="grid"></div>
+<button id="next">Next generation</button>
+
+<script>
+  // Your code here.
+  const div = document.getElementById("grid");
+  const button = document.getElementById("next");
+  const width = 3;
+
+  function createCheckbox(checked) {
+    let checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked = checked;
+    return checkbox;
+  }
+
+  function createRandomGameGrid(width) {
+    let gameGrid = [];
+    for (let y = 0; y < width; y++) {
+      let row = [];
+      for (let x = 0; x < width; x++) {
+        let rand = Math.round(Math.random());
+        let checkbox = createCheckbox(Boolean(rand));
+        row.push(checkbox);
+      }
+      gameGrid.push(row);
+    }
+    return gameGrid
+  }
+  let gameGrid = createRandomGameGrid(width);
+
+  function insertGameGrid(container, gameGrid) {
+    gameGrid.forEach(row => {
+      row.forEach(checkbox => {
+        container.appendChild(checkbox);
+      })
+      container.appendChild(document.createElement("br"));
+    })
+  }
+  insertGameGrid(div, gameGrid);
+
+  function updateGameGrid(gameGrid) {
+    let mapped = gameGrid.map(row => {
+      return row.map(checkbox => checkbox.checked);
+    });
+    let updated = mapped.map(row => row.slice());
+    for (let y = 0; y < mapped.length; y++) {
+      for (let x = 0; x < mapped[y].length; x++) {
+        let cell = gameGrid[y][x];
+        let live = mapped[y][x];
+        let count = 0;
+        for (let k = y - 1; k <= y + 1; k++) {
+          for (let i = x - 1; i <= x + 1; i++) {
+            if (mapped[k] && mapped[k][i]) {
+              if (gameGrid[k][i] != cell) count++;
+            }
+          }
+        }
+        if (live) {
+          if (count < 2 || count > 3) updated[y][x] = false;
+        } else {
+          if (count == 3) updated[y][x] = true;
+        }
+        cell.checked = updated[y][x];
+      }
+    }
+  }
+
+  button.addEventListener("click", event => {
+    updateGameGrid(gameGrid);
+  })
+</script>
